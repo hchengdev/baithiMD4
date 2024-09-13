@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,20 +26,18 @@ public class Oder {
 
     @NotNull
     @Future
-    private LocalDate ngayMua;
+    private LocalDateTime ngayMua;
 
     private Long tongSoluong;
 
     @Min(value = 10000)
     private BigDecimal tongTien;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public void calculateTotal() {
-        if (product != null && tongSoluong != null) {
-            this.tongTien = BigDecimal.valueOf(product.getPrice()).multiply(BigDecimal.valueOf(tongSoluong));
-        }
+    public Long getTongTien() {
+        return this.product.getPrice() * tongSoluong;
     }
 }

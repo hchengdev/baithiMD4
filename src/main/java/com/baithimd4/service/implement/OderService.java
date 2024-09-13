@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -45,36 +46,18 @@ public class OderService implements IOderService {
     }
 
     @Override
-    public void update(Long id, Oder updatedOder) {
-        Oder existingOder = repository.findById(id)
-                .orElseThrow(() -> new OurException("Order with id " + id + " not found"));
-
-        Product updatedProduct = updatedOder.getProduct();
-        if (updatedProduct != null) {
-            Product existingProduct = productRepo.findById(updatedProduct.getId())
-                    .orElseThrow(() -> new OurException("Product with id " + updatedProduct.getId() + " not found"));
-
-            existingProduct.setTenSanPham(updatedProduct.getTenSanPham());
-            existingProduct.setPrice(updatedProduct.getPrice());
-            existingProduct.setTinhTrang(updatedProduct.getTinhTrang());
-            existingProduct.setCategory(updatedProduct.getCategory());
-
-            productRepo.save(existingProduct);
-
-            existingOder.setProduct(existingProduct);
-        }
-
-        existingOder.setNgayMua(updatedOder.getNgayMua());
-        existingOder.setTongSoluong(updatedOder.getTongSoluong());
-        existingOder.setTongTien(updatedOder.getTongTien());
-
-        repository.save(existingOder);
+    public void update(Oder oder) {
+        repository.save(oder);
     }
-
 
 
     @Override
     public Page<Oder> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Oder> findByNgayMuaBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable) {
+        return repository.findByNgayMuaBetween(startDateTime, endDateTime, pageable);
     }
 }

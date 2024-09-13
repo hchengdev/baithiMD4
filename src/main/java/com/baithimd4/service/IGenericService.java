@@ -11,6 +11,6 @@ public interface IGenericService<T> {
 
     Iterable<T> findAll();
 
-    void update(Long id, T t);
+    void update(T t);
 
 }

@@ -45,17 +45,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void update(Long id, Product product) {
-        Product existingProduct = productRepo.findById(id)
-               .orElseThrow(() -> new OurException("Product with id " + id + " not found"));
+    public void update(Product product) {
 
-        existingProduct.setTenSanPham(product.getTenSanPham());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setTinhTrang(product.getTinhTrang());
-        existingProduct.setCategory(product.getCategory());
-
-        productRepo.save(existingProduct);
     }
+
 
 
 }
