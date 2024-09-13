@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Order code: ' +${order.id}"></title>
+</head>
+<body>
+<h3>Sửa thông tin đơn hàng</h3>
+<form th:action="@{/orders/update/{id}(id=${order.id})}" th:object="${order}" method="post">
+    <div class="form-group">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" id="quantity" th:field="*{quantity}" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label for="productName" class="form-label">Product Name</label>
+        <select id="productName" th:field="*{product}">
+            <option th:each="p : ${productList}"
+                    th:text="${p.name}"
+                    th:value="${p.id}">
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="productCategory" class="form-label">Product Category</label>
+        <select id="productCategory"  >
+            <option th:each="c : ${categoryList}"
+                    th:text="${c.name}"
+                    th:value="${c.id}">
+            </option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Order</button>
+</form>

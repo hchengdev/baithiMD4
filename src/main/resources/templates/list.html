@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .table {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        thead th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-text {
+            margin-bottom: 20px;
+        }
+
+        .action-buttons button {
+            margin: 5px;
+        }
+    </style>
+
+</head>
+<body>
+<table class="table table-bordered mt-4">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Mã Đơn Hàng</th>
+        <th>Tên Sản Phẩm</th>
+        <th>Giá (USD)</th>
+        <th>Loại Sản Phẩm</th>
+        <th>Ngày Mua</th>
+        <th>Số lượng</th>
+        <th>Tổng tiền (USD)</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order, iterStat : ${orderList}">
+        <td th:text="${iterStat.index + 1}">1</td>
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.product.tenSanPham}"></td>
+        <td th:text="${order.product.price}"></td>
+        <td th:text="${order.product.category.name}"></td>
+        <td th:text="${order.ngayMua}"></td>
+        <td th:text="${order.tongSoluong}"></td>
+        <td th:text="${order.calculateTotal()}"></td>
+        <td>
+            <a th:href="@{/orders/update/{id}(id=${order.id})}" class="btn btn-warning">Edit</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" th:classappend="${orderList.hasPrevious()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/order(page=${orderList.number - 1})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:each="page : ${#numbers.sequence(0, orderList.totalPages - 1)}"
+            th:classappend="${page == orderList.number} ? 'active'">
+            <a class="page-link" th:href="@{/order(page=${page})}" th:text="${page + 1}"></a>
+        </li>
+        <li class="page-item" th:classappend="${orderList.hasNext()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/order(page=${orderList.number + 1})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
