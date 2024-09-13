@@ -65,7 +65,7 @@ public class OrderController {
             return "redirect:/orders";
         }
         service.save(editedOrder);
-        return "redirect:/list";
+        return "redirect:/orders";
     }
 
 

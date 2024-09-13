@@ -35,7 +35,7 @@
 
         <div class="form-group">
             <label for="orderDate" class="form-label">Order Date</label>
-            <input type="date" id="orderDate" th:field="*{ngayMua}" class="form-control"
+            <input type="datetime-local" id="orderDate" th:field="*{ngayMua}" class="form-control"
                    th:value="${order.ngayMua}"
             >
         </div>

@@ -2,10 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .table {
@@ -22,13 +33,6 @@
             vertical-align: middle;
         }
 
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
         .header-text {
             margin-bottom: 20px;
         }
@@ -36,53 +40,103 @@
         .action-buttons button {
             margin: 5px;
         }
-    </style>
 
+        .pagination-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-info {
+            margin: 0 15px;
+        }
+    </style>
 </head>
 <body>
-<form action="#" th:action="@{/orders/search}" method="get">
-    <label for="startDate">From:</label>
-    <input type="date" id="startDate" name="startDate" required>
-    <label for="endDate">To:</label>
-    <input type="date" id="endDate" name="endDate" required>
-    <button type="submit">Search</button>
-</form>
-<table class="table table-bordered mt-4">
-    <thead>
-    <tr>
-        <th>STT</th>
-        <th>Mã Đơn Hàng</th>
-        <th>Tên Sản Phẩm</th>
-        <th>Giá (USD)</th>
-        <th>Loại Sản Phẩm</th>
-        <th>Ngày Mua</th>
-        <th>Số lượng</th>
-        <th>Tổng tiền (USD)</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="order, iterStat : ${orderList}">
-        <td th:text="${iterStat.index + 1}">1</td>
-        <td th:text="${order.id}"></td>
-        <td th:text="${order.product.tenSanPham}"></td>
-        <td th:text="${order.product.price}"></td>
-        <td th:text="${order.product.category.name}"></td>
-        <td th:text="${order.ngayMua}"></td>
-        <td th:text="${order.tongSoluong}"></td>
-        <td th:text="${order.getTongTien()}"></td>
-        <td>
-            <a th:href="@{/orders/update/__${order.id}__}" class="btn btn-warning">Edit</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div>
-    <a class="btn btn-primary" th:if="${orderList.hasPrevious()}"
-       th:href="@{/orders(page=${orderList.number - 1})}">Previous</a>
-    <span th:text="${orderList.number + 1}"></span> | <span th:text="${orderList.totalPages}"></span>
-    <a class="btn btn-primary" th:if="${orderList.hasNext()}"
-       th:href="@{/orders(page=${orderList.number + 1})}">Next</a>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Order Management</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Orders</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-text text-center">
+        <h1>Order List</h1>
+    </div>
+
+    <!-- Search Form -->
+    <form action="#" th:action="@{/orders/search}" method="get" class="form-inline justify-content-center mb-4">
+        <div class="form-group">
+            <label for="startDate">From: </label>
+            <input type="date" id="startDate" name="startDate" class="form-control mx-2" required>
+        </div>
+        <div class="form-group">
+            <label for="endDate">To: </label>
+            <input type="date" id="endDate" name="endDate" class="form-control mx-2" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <!-- Orders Table -->
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Mã Đơn Hàng</th>
+            <th>Tên Sản Phẩm</th>
+            <th>Giá (USD)</th>
+            <th>Loại Sản Phẩm</th>
+            <th>Ngày Mua</th>
+            <th>Số lượng</th>
+            <th>Tổng tiền (USD)</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, iterStat : ${orderList}">
+            <td th:text="${iterStat.index + 1}">1</td>
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.product.tenSanPham}"></td>
+            <td th:text="${order.product.price}"></td>
+            <td th:text="${order.product.category.name}"></td>
+            <td th:text="${order.ngayMua}"></td>
+            <td th:text="${order.tongSoluong}"></td>
+            <td th:text="${order.getTongTien()}"></td>
+            <td>
+                <a th:href="@{/orders/update/__${order.id}__}" class="btn btn-warning btn-sm">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <a class="btn btn-primary" th:if="${orderList.hasPrevious()}"
+           th:href="@{/orders(page=${orderList.number - 1})}">Previous</a>
+
+        <div class="page-info">
+            <span th:text="${orderList.number + 1}"></span> / <span th:text="${orderList.totalPages}"></span>
+        </div>
+
+        <a class="btn btn-primary" th:if="${orderList.hasNext()}"
+           th:href="@{/orders(page=${orderList.number + 1})}">Next</a>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
